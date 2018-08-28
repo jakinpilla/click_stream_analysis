@@ -1,0 +1,41 @@
+customer age and gender are very important parameters for both retailing and marketing
+novel data cube
+ - demographic data, customer visits, mouse movement, online shopping cart, 
+ - external data, time dimension
+
+
+time dimension
+ - total time spent on the site
+ - first item add time
+ - period of the day(as morning, afternoon, evening hours or late at night
+ - day of week
+
+mouse movement dimension
+ - all clicks made
+ - order of clicks(as 1st, 2nd, 3rd etc)
+ - category of clicks(dress- jaket- sweater-, shoes-boots-sandals, undrewear)
+
+visit dimension
+ - they are search(indicates if user has conducted a product search)
+ - category of search
+
+market basket dimension
+ - product sex category in basket(as child-boy, child-girl, unisex, woman, man)
+ - number of items in basket
+ - discounted item in basket
+
+
+# CT_xxx :: 웹사이트 카테고리 별 체류시간 비율, 즉, 총 17개 카테고리 중에 특정 카테고리에 얼마나 머물렀는가를 비율로 계산한 값
+# COVERAGE :: 서로 다른 웹 사이트에 얼마나 다양하게 접속했는지에 대한 비률('서로 다은 카테고리 수/17'로 계산)
+# DWELLTIME :: 총 체류시간
+# PAGEVIEWS :: 총 페이지뷰
+# HF_xxx :: 시간대별(0-5시, 6-11시, 12-17시, 18-23시) 체류시간 비율
+# DF_xxx :: 요일별 체류시간 비율
+# VISITES :: 접속한 서로 다른 웹사이트의 수
+# SITECOV :: 웹사이트 카케고리 별 체류시간 변동계수(카테고리별 체류시간의 '표준편차/평균' 값)
+# VDAYS :: 총 접속일수
+# DAYTIME :: 하루 평균 체류시간
+# DAYCOV :: 일별 변동계수(일일 체류시간의 '표준편차/평균' 값)
+# SCH_KEYWORDS :: 네이버에서 검색한 검색량
+# SCH_TOPKEYWORD :: 네이버에서 가장 많이 검색한 검색어
+# GENDER :: 고객성별(남자/여자). 예측하고자 하는 값
