@@ -25,19 +25,44 @@ market basket dimension
  - discounted item in basket
 
 
-# CT_xxx :: 웹사이트 카테고리 별 체류시간 비율, 즉, 총 17개 카테고리 중에 특정 카테고리에 얼마나 머물렀는가를 비율로 계산한 값
-# COVERAGE :: 서로 다른 웹 사이트에 얼마나 다양하게 접속했는지에 대한 비률('서로 다은 카테고리 수/17'로 계산)
-# DWELLTIME :: 총 체류시간
+# user profiling 
+
+# CT_xxx :: 웹사이트 카테고리 별 체류시간 비율, 즉, 총 17개 카테고리 중에 특정 카테고리에 얼마나 머물렀는가를 비율로 계산한 값, 0-1사이의 값을 가지며 연속형 변수로 표현, 큰 값을 가질수록 해당 웹페이지 카테고리에 대한 방문 선호도가 높다는 것을 의미, 또한 사용자 별로 변수를 생성하였기 때문데 사용자 1명당 카테고리별 페이지뷰 비율의 합은 1임
+ - 계산전략_1 :: 먼저 사용자별, 일자별 총 체류시간을 계산한다.(group_by(custid, day) %>% summaries(day_dwelltime = sum(time))
+ - 계산전략_2 :: 위의 계산전략_1의 결과를 가지고 사용자별 총 체류시간을 계산한다.(group_by(custid) %>% summarise(gross_dwelltime = sum(day_dwelltime)
+ - 계산전략_3 :: 사용자별, 카테고리별, 일자별 체류시간을 계산한다.(group_by(custid, category, day) %>% summarise(ct_day_dwelltime = sum(time))
+ - 계산전략_4 :: 위의 계산전략_3의 결과를 가지고 (사용자별, 카테고리별 체류시간)을 계산한다.(group_by(custid, category) %>% summarise(ct_dwelltime =sum(time))
+ - 계산전략_5 :: (사용자별, 카테고리별 체류시간) / (총 체류시간) df['ct_dwelltime'] / df['gross_dwelltime']
+ - 전제조건 :: 데이터 컬럼명에 custid, category, day, time 컬럼들이 있어야 함. unique(custid) = 2000, unique(category) = 17, unique(day) = 365, 
+            time은 해당 고객, 카테고리, 일자 별의 dwelltime으로 있어야 함(시차를 계산)
+
+# COVERAGE :: 서로 다른 웹 사이트에 얼마나 다양하게 접속했는지에 대한 비율('서로 다른 카테고리 수/전체 카테고리 수(17)'로 계산)
+ - ID 1번 사람의 경우 COVERGAE = 0.074 인데, 이를 참고해 서로 다른 카테고리 수를 계산하면 1.258, 서로다른 카테고리수가 1.258?? 의문점 해소 필요
+
+# G_DWELLTIME :: 총 체류시간, 계산전략_2에서 계산 가능
+
 # PAGEVIEWS :: 총 페이지뷰
+
 # HF_xxx :: 시간대별(0-5시, 6-11시, 12-17시, 18-23시) 체류시간 비율
+ - 계산전략_6 :: 계산전략_1에서 계산한 해당 고객별, 일자별의 dwelltime을 binning을 통해 0-5시, 6-11시, 12-17시, 18-23시 구간으로 나누어 해당시간대를 labeling
+ - labeling 된 결과를 one-hot을 이용, 컬럼으로 변환(해당사항이 있으면 1, 없으면 0)
+
 # DF_xxx :: 요일별 체류시간 비율
+
 # VISITES :: 접속한 서로 다른 웹사이트의 수
-# SITECOV :: 웹사이트 카케고리 별 체류시간 변동계수(카테고리별 체류시간의 '표준편차/평균' 값)
+
+# SITECOV :: 웹사이트 카케고리 별 체류시간 변동계수(카테고리별 체류시간의 '표준편차/평균' 값) :: 4.272
+
 # VDAYS :: 총 접속일수
+
 # DAYTIME :: 하루 평균 체류시간
+
 # DAYCOV :: 일별 변동계수(일일 체류시간의 '표준편차/평균' 값)
+
 # SCH_KEYWORDS :: 네이버에서 검색한 검색량
+
 # SCH_TOPKEYWORD :: 네이버에서 가장 많이 검색한 검색어
+
 # GENDER :: 고객성별(남자/여자). 예측하고자 하는 값
 
 10회> 
