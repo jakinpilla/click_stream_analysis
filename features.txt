@@ -1,4 +1,4 @@
-ï»¿customer age and gender are very important parameters for both retailing and marketing
+customer age and gender are very important parameters for both retailing and marketing
 novel data cube
  - demographic data, customer visits, mouse movement, online shopping cart, 
  - external data, time dimension
@@ -27,61 +27,72 @@ market basket dimension
 
 # user profiling 
 
-# CT_xxx :: ì›¹ì‚¬ì´íŠ¸ ì¹´í…Œê³ ë¦¬ ë³„ ì²´ë¥˜ì‹œê°„ ë¹„ìœ¨, ì¦‰, ì´ 17ê°œ ì¹´í…Œê³ ë¦¬ ì¤‘ì— íŠ¹ì • ì¹´í…Œê³ ë¦¬ì— ì–¼ë§ˆë‚˜ ë¨¸ë¬¼ë €ëŠ”ê°€ë¥¼ ë¹„ìœ¨ë¡œ ê³„ì‚°í•œ ê°’, 0-1ì‚¬ì´ì˜ ê°’ì„ ê°€ì§€ë©° ì—°ì†í˜• ë³€ìˆ˜ë¡œ í‘œí˜„, í° ê°’ì„ ê°€ì§ˆìˆ˜ë¡ í•´ë‹¹ ì›¹íŽ˜ì´ì§€ ì¹´í…Œê³ ë¦¬ì— ëŒ€í•œ ë°©ë¬¸ ì„ í˜¸ë„ê°€ ë†’ë‹¤ëŠ” ê²ƒì„ ì˜ë¯¸, ë˜í•œ ì‚¬ìš©ìž ë³„ë¡œ ë³€ìˆ˜ë¥¼ ìƒì„±í•˜ì˜€ê¸° ë•Œë¬¸ë° ì‚¬ìš©ìž 1ëª…ë‹¹ ì¹´í…Œê³ ë¦¬ë³„ íŽ˜ì´ì§€ë·° ë¹„ìœ¨ì˜ í•©ì€ 1ìž„
- - ê³„ì‚°ì „ëžµ_1 :: ë¨¼ì € ì‚¬ìš©ìžë³„, ì¼ìžë³„ ì´ ì²´ë¥˜ì‹œê°„ì„ ê³„ì‚°í•œë‹¤.(group_by(custid, day) %>% summaries(day_dwelltime = sum(time))
- - ê³„ì‚°ì „ëžµ_2 :: ìœ„ì˜ ê³„ì‚°ì „ëžµ_1ì˜ ê²°ê³¼ë¥¼ ê°€ì§€ê³  ì‚¬ìš©ìžë³„ ì´ ì²´ë¥˜ì‹œê°„ì„ ê³„ì‚°í•œë‹¤.(group_by(custid) %>% summarise(gross_dwelltime = sum(day_dwelltime)
- - ê³„ì‚°ì „ëžµ_3 :: ì‚¬ìš©ìžë³„, ì¹´í…Œê³ ë¦¬ë³„, ì¼ìžë³„ ì²´ë¥˜ì‹œê°„ì„ ê³„ì‚°í•œë‹¤.(group_by(custid, category, day) %>% summarise(ct_day_dwelltime = sum(time))
- - ê³„ì‚°ì „ëžµ_4 :: ìœ„ì˜ ê³„ì‚°ì „ëžµ_3ì˜ ê²°ê³¼ë¥¼ ê°€ì§€ê³  (ì‚¬ìš©ìžë³„, ì¹´í…Œê³ ë¦¬ë³„ ì²´ë¥˜ì‹œê°„)ì„ ê³„ì‚°í•œë‹¤.(group_by(custid, category) %>% summarise(ct_dwelltime =sum(time))
- - ê³„ì‚°ì „ëžµ_5 :: (ì‚¬ìš©ìžë³„, ì¹´í…Œê³ ë¦¬ë³„ ì²´ë¥˜ì‹œê°„) / (ì´ ì²´ë¥˜ì‹œê°„) df['ct_dwelltime'] / df['gross_dwelltime']
- - ì „ì œì¡°ê±´ :: ë°ì´í„° ì»¬ëŸ¼ëª…ì— custid, category, day, time ì»¬ëŸ¼ë“¤ì´ ìžˆì–´ì•¼ í•¨. unique(custid) = 2000, unique(category) = 17, unique(day) = 365, 
-            timeì€ í•´ë‹¹ ê³ ê°, ì¹´í…Œê³ ë¦¬, ì¼ìž ë³„ì˜ dwelltimeìœ¼ë¡œ ìžˆì–´ì•¼ í•¨(ì‹œì°¨ë¥¼ ê³„ì‚°)
+# CT_xxx :: À¥»çÀÌÆ® Ä«Å×°í¸® º° Ã¼·ù½Ã°£ ºñÀ², Áï, ÃÑ 17°³ Ä«Å×°í¸® Áß¿¡ Æ¯Á¤ Ä«Å×°í¸®¿¡ ¾ó¸¶³ª ¸Ó¹°·¶´Â°¡¸¦ ºñÀ²·Î °è»êÇÑ °ª, 0-1»çÀÌÀÇ °ªÀ» °¡Áö¸ç ¿¬¼ÓÇü º¯¼ö·Î Ç¥Çö, Å« °ªÀ» °¡Áú¼ö·Ï ÇØ´ç À¥ÆäÀÌÁö Ä«Å×°í¸®¿¡ ´ëÇÑ ¹æ¹® ¼±È£µµ°¡ ³ô´Ù´Â °ÍÀ» ÀÇ¹Ì, ¶ÇÇÑ »ç¿ëÀÚ º°·Î º¯¼ö¸¦ »ý¼ºÇÏ¿´±â ¶§¹®µ¥ »ç¿ëÀÚ 1¸í´ç Ä«Å×°í¸®º° ÆäÀÌÁöºä ºñÀ²ÀÇ ÇÕÀº 1ÀÓ
+ - °è»êÀü·«_1 :: ¸ÕÀú »ç¿ëÀÚº°, ÀÏÀÚº° ÃÑ Ã¼·ù½Ã°£À» °è»êÇÑ´Ù.(group_by(custid, day) %>% summaries(day_dwelltime = sum(time))
+ - °è»êÀü·«_2 :: À§ÀÇ °è»êÀü·«_1ÀÇ °á°ú¸¦ °¡Áö°í »ç¿ëÀÚº° ÃÑ Ã¼·ù½Ã°£À» °è»êÇÑ´Ù.(group_by(custid) %>% summarise(gross_dwelltime = sum(day_dwelltime))
+ - °è»êÀü·«_3 :: »ç¿ëÀÚº°, Ä«Å×°í¸®º°, ÀÏÀÚº° Ã¼·ù½Ã°£À» °è»êÇÑ´Ù.(group_by(custid, category, day) %>% summarise(ct_day_dwelltime = sum(time))
+ - °è»êÀü·«_4 :: À§ÀÇ °è»êÀü·«_3ÀÇ °á°ú¸¦ °¡Áö°í (»ç¿ëÀÚº°, Ä«Å×°í¸®º° Ã¼·ù½Ã°£)À» °è»êÇÑ´Ù.(group_by(custid, category) %>% summarise(ct_dwelltime =sum(time))
+ - °è»êÀü·«_5 :: (»ç¿ëÀÚº°, Ä«Å×°í¸®º° Ã¼·ù½Ã°£) / (ÃÑ Ã¼·ù½Ã°£) df['ct_dwelltime'] / df['gross_dwelltime']
+ - ÀüÁ¦Á¶°Ç :: µ¥ÀÌÅÍ ÄÃ·³¸í¿¡ custid, category, day, time ÄÃ·³µéÀÌ ÀÖ¾î¾ß ÇÔ. unique(custid) = 2000, unique(category) = 17, unique(day) = 365, 
+            timeÀº ÇØ´ç °í°´, Ä«Å×°í¸®, ÀÏÀÚ º°ÀÇ dwelltimeÀ¸·Î ÀÖ¾î¾ß ÇÔ(½ÃÂ÷¸¦ °è»ê)
 
-# COVERAGE :: ì„œë¡œ ë‹¤ë¥¸ ì›¹ ì‚¬ì´íŠ¸ì— ì–¼ë§ˆë‚˜ ë‹¤ì–‘í•˜ê²Œ ì ‘ì†í–ˆëŠ”ì§€ì— ëŒ€í•œ ë¹„ìœ¨('ì„œë¡œ ë‹¤ë¥¸ ì¹´í…Œê³ ë¦¬ ìˆ˜/ì „ì²´ ì¹´í…Œê³ ë¦¬ ìˆ˜(17)'ë¡œ ê³„ì‚°)
- - ID 1ë²ˆ ì‚¬ëžŒì˜ ê²½ìš° COVERGAE = 0.074 ì¸ë°, ì´ë¥¼ ì°¸ê³ í•´ ì„œë¡œ ë‹¤ë¥¸ ì¹´í…Œê³ ë¦¬ ìˆ˜ë¥¼ ê³„ì‚°í•˜ë©´ 1.258, ì„œë¡œë‹¤ë¥¸ ì¹´í…Œê³ ë¦¬ìˆ˜ê°€ 1.258?? ì˜ë¬¸ì  í•´ì†Œ í•„ìš”
+# COVERAGE :: ¼­·Î ´Ù¸¥ À¥ »çÀÌÆ®¿¡ ¾ó¸¶³ª ´Ù¾çÇÏ°Ô Á¢¼ÓÇß´ÂÁö¿¡ ´ëÇÑ ºñÀ²('¼­·Î ´Ù¸¥ Ä«Å×°í¸® ¼ö/ÀüÃ¼ Ä«Å×°í¸® ¼ö(17)'·Î °è»ê)
+ - ID 1¹ø »ç¶÷ÀÇ °æ¿ì COVERGAE = 0.074 ÀÎµ¥, ÀÌ¸¦ Âü°íÇØ ¼­·Î ´Ù¸¥ Ä«Å×°í¸® ¼ö¸¦ °è»êÇÏ¸é 1.258, ¼­·Î´Ù¸¥ Ä«Å×°í¸®¼ö°¡ 1.258?? ÀÇ¹®Á¡ ÇØ¼Ò ÇÊ¿ä
 
-# G_DWELLTIME :: ì´ ì²´ë¥˜ì‹œê°„, ê³„ì‚°ì „ëžµ_2ì—ì„œ ê³„ì‚° ê°€ëŠ¥
+# G_DWELLTIME :: ÃÑ Ã¼·ù½Ã°£, °è»êÀü·«_2¿¡¼­ °è»ê °¡´É
 
-# PAGEVIEWS :: ì´ íŽ˜ì´ì§€ë·°
+# PAGEVIEWS :: ÃÑ ÆäÀÌÁöºä
+ - °è»êÀü·«_6 :: »ç¿ëÀÚº° ÃÑ ÆäÀÌÁöºä¸¦ ±¸ÇÔ(group_by(custid) %>% summarise(count.pageview = count(pages))
 
-# HF_xxx :: ì‹œê°„ëŒ€ë³„(0-5ì‹œ, 6-11ì‹œ, 12-17ì‹œ, 18-23ì‹œ) ì²´ë¥˜ì‹œê°„ ë¹„ìœ¨
- - ê³„ì‚°ì „ëžµ_6 :: ê³„ì‚°ì „ëžµ_1ì—ì„œ ê³„ì‚°í•œ í•´ë‹¹ ê³ ê°ë³„, ì¼ìžë³„ì˜ dwelltimeì„ binningì„ í†µí•´ 0-5ì‹œ, 6-11ì‹œ, 12-17ì‹œ, 18-23ì‹œ êµ¬ê°„ìœ¼ë¡œ ë‚˜ëˆ„ì–´ í•´ë‹¹ì‹œê°„ëŒ€ë¥¼ labeling
- - labeling ëœ ê²°ê³¼ë¥¼ one-hotì„ ì´ìš©, ì»¬ëŸ¼ìœ¼ë¡œ ë³€í™˜(í•´ë‹¹ì‚¬í•­ì´ ìžˆìœ¼ë©´ 1, ì—†ìœ¼ë©´ 0)
+# HF_xxx :: ½Ã°£´ëº°(0-5½Ã, 6-11½Ã, 12-17½Ã, 18-23½Ã) Ã¼·ù½Ã°£ ºñÀ²
+ - °è»êÀü·«_7 :: °è»êÀü·«_1¿¡¼­ °è»êÇÑ ÇØ´ç °í°´º°, ÀÏÀÚº°ÀÇ dwelltimeÀ» binningÀ» ÅëÇØ 0-5½Ã, 6-11½Ã, 12-17½Ã, 18-23½Ã ±¸°£À¸·Î ³ª´©¾î ÇØ´ç½Ã°£´ë¸¦ labeling
+ - labeling µÈ °á°ú¸¦ one-hotÀ» ÀÌ¿ë, ÄÃ·³À¸·Î º¯È¯(ÇØ´ç»çÇ×ÀÌ ÀÖÀ¸¸é 1, ¾øÀ¸¸é 0)
+ - 
 
-# DF_xxx :: ìš”ì¼ë³„ ì²´ë¥˜ì‹œê°„ ë¹„ìœ¨
+# DF_xxx :: ¿äÀÏº° Ã¼·ù½Ã°£ ºñÀ²
+ - °è»êÀü·«_8 :: ÀÏÀÚ¿¡¼­ ¿äÀÏÀ» ÃßÃâÇÏ±â(format(date, '%a')) 
+ - df$ymd <- as.Date(df$ymd)
+ - df$weekday <- format(df$ymd, '%a')
+ - df$weekday <- as.factor(df$weekday)
+ - °è»êÀü·«_9 :: »ç¿ëÀÚº°, ¿äÀÏº° ÃÑ Ã¼·ù½Ã°£ ºñÀ²°è»ê(group_by(custid, weekday) %>% summarise(weekday_timerate=(sum(time) / G_DWELLTIME))
+ - library(dummies)
+ - df <- dummy.data.frame(df, names=c('weekday', sep='_'))
+ - 
+ - df %>% group_by(custid) %>% summarise(sum_sun = sum(weekday_ÀÏ), sum_mon = sum(weekday_¿ù), ..., sum_sat = sum(weekday_Åä) -> weekday_rate
 
-# VISITES :: ì ‘ì†í•œ ì„œë¡œ ë‹¤ë¥¸ ì›¹ì‚¬ì´íŠ¸ì˜ ìˆ˜
+# VISITES :: Á¢¼ÓÇÑ ¼­·Î ´Ù¸¥ À¥»çÀÌÆ®ÀÇ ¼ö
 
-# SITECOV :: ì›¹ì‚¬ì´íŠ¸ ì¹´ì¼€ê³ ë¦¬ ë³„ ì²´ë¥˜ì‹œê°„ ë³€ë™ê³„ìˆ˜(ì¹´í…Œê³ ë¦¬ë³„ ì²´ë¥˜ì‹œê°„ì˜ 'í‘œì¤€íŽ¸ì°¨/í‰ê· ' ê°’) :: 4.272
+# SITECOV :: À¥»çÀÌÆ® Ä«ÄÉ°í¸® º° Ã¼·ù½Ã°£ º¯µ¿°è¼ö(Ä«Å×°í¸®º° Ã¼·ù½Ã°£ÀÇ 'Ç¥ÁØÆíÂ÷/Æò±Õ' °ª) :: 4.272
 
-# VDAYS :: ì´ ì ‘ì†ì¼ìˆ˜
+# VDAYS :: ÃÑ Á¢¼ÓÀÏ¼ö
 
-# DAYTIME :: í•˜ë£¨ í‰ê·  ì²´ë¥˜ì‹œê°„
+# DAYTIME :: ÇÏ·ç Æò±Õ Ã¼·ù½Ã°£
 
-# DAYCOV :: ì¼ë³„ ë³€ë™ê³„ìˆ˜(ì¼ì¼ ì²´ë¥˜ì‹œê°„ì˜ 'í‘œì¤€íŽ¸ì°¨/í‰ê· ' ê°’)
+# DAYCOV :: ÀÏº° º¯µ¿°è¼ö(ÀÏÀÏ Ã¼·ù½Ã°£ÀÇ 'Ç¥ÁØÆíÂ÷/Æò±Õ' °ª)
 
-# SCH_KEYWORDS :: ë„¤ì´ë²„ì—ì„œ ê²€ìƒ‰í•œ ê²€ìƒ‰ëŸ‰
+# SCH_KEYWORDS :: ³×ÀÌ¹ö¿¡¼­ °Ë»öÇÑ °Ë»ö·®
 
-# SCH_TOPKEYWORD :: ë„¤ì´ë²„ì—ì„œ ê°€ìž¥ ë§Žì´ ê²€ìƒ‰í•œ ê²€ìƒ‰ì–´
+# SCH_TOPKEYWORD :: ³×ÀÌ¹ö¿¡¼­ °¡Àå ¸¹ÀÌ °Ë»öÇÑ °Ë»ö¾î
 
-# GENDER :: ê³ ê°ì„±ë³„(ë‚¨ìž/ì—¬ìž). ì˜ˆì¸¡í•˜ê³ ìž í•˜ëŠ” ê°’
+# GENDER :: °í°´¼ºº°(³²ÀÚ/¿©ÀÚ). ¿¹ÃøÇÏ°íÀÚ ÇÏ´Â °ª
 
-10íšŒ> 
-1) í´ë¦­ìŠ¤íŠ¸ë¦¬ë° ë°ì´í„° 800ë§Œê±´, ì„±ë³„ì˜ˆì¸¡
-   - ë°ì´í„°ë¥¼ ë³´ê³  groupby(custid) í•˜ì—¬ ìœ„ì˜ featureë“¤ì„ ì¶”ì¶œí•˜ëŠ” ê²ƒì´ ê´€ê±´
-2) carsheet ë°ì´í„° í†µê³„ë¶„ì„, ìš”ì¸ì¶”ì¶œ, ì„ í˜•íšŒê·€, anova
-3) ì„ ë¬¼ê´€ë ¨ text ë°ì´í„°, ë‹¨ì–´ì¶”ì¶œ ë° ë¹ˆë„ì‚°ì¶œ
+10È¸> 
+1) Å¬¸¯½ºÆ®¸®¹Ö µ¥ÀÌÅÍ 800¸¸°Ç, ¼ºº°¿¹Ãø
+   - µ¥ÀÌÅÍ¸¦ º¸°í groupby(custid) ÇÏ¿© À§ÀÇ featureµéÀ» ÃßÃâÇÏ´Â °ÍÀÌ °ü°Ç
+2) carsheet µ¥ÀÌÅÍ Åë°èºÐ¼®, ¿äÀÎÃßÃâ, ¼±ÇüÈ¸±Í, anova
+3) ¼±¹°°ü·Ã text µ¥ÀÌÅÍ, ´Ü¾îÃßÃâ ¹× ºóµµ»êÃâ
 
 
 
-11íšŒ> ë°±í™”ì  ì§€ì ë³„ íŒë§¤ë°ì´í„° ë° ê³ ê°ë°ì´í„°ë¥¼ ì´ìš© ì„±ë³„ ì˜ˆì¸¡ëª¨ë¸ì„ êµ¬í˜„í•˜ê³  ì´ë¥¼ í…ŒìŠ¤íŠ¸ ë°ì´í„°ì— ë„£ì–´
-ê³ ê° ì„±ë³„ì˜ˆì¸¡ ê²°ê³¼ë¥¼ ì œì¶œ
- - ê³ ê° id, ì¼ìž, ì‹œê°„(ìˆ«ìž 4ìžë¦¬), ë¸Œëžœë“œëª…, ì½”ë„ˆëª…, íŒ€ëª…(3), ìƒí’ˆì¹´í…Œê³ ë¦¬, ìƒí’ˆì½”ë“œ, ì´íŒë§¤ì•¡,
-   í• ì¸ì•¡, net_amt, ìˆ˜ìž…ì œí’ˆì—¬ë¶€
+11È¸> ¹éÈ­Á¡ ÁöÁ¡º° ÆÇ¸Åµ¥ÀÌÅÍ ¹× °í°´µ¥ÀÌÅÍ¸¦ ÀÌ¿ë ¼ºº° ¿¹Ãø¸ðµ¨À» ±¸ÇöÇÏ°í ÀÌ¸¦ Å×½ºÆ® µ¥ÀÌÅÍ¿¡ ³Ö¾î
+°í°´ ¼ºº°¿¹Ãø °á°ú¸¦ Á¦Ãâ
+ - °í°´ id, ÀÏÀÚ, ½Ã°£(¼ýÀÚ 4ÀÚ¸®), ºê·£µå¸í, ÄÚ³Ê¸í, ÆÀ¸í(3), »óÇ°Ä«Å×°í¸®, »óÇ°ÄÚµå, ÃÑÆÇ¸Å¾×,
+   ÇÒÀÎ¾×, net_amt, ¼öÀÔÁ¦Ç°¿©ºÎ
 
 college.csv
-- ëŒ€í•™ì§€ì›ìžìˆ˜ì— ê°€ìž¥ ë§Žì€ ì˜í–¥ì„ ë¯¸ì¹˜ëŠ” ìš”ì¸ ë¶„ì„í•˜ê¸°
+- ´ëÇÐÁö¿øÀÚ¼ö¿¡ °¡Àå ¸¹Àº ¿µÇâÀ» ¹ÌÄ¡´Â ¿äÀÎ ºÐ¼®ÇÏ±â
 
 ai.text
-- ì¸ê³µì§€ëŠ¥ ê´€ë ¨ ê²€ìƒ‰ë°ì´í„°
-- ì¼ìž, ì œëª©, ë‚´ìš©
-- ë‹¨ì–´ì¶”ì¶œ ë° ë¹ˆë„ì‚°ì¶œ ë“± í•˜ê¸°
+- ÀÎ°øÁö´É °ü·Ã °Ë»öµ¥ÀÌÅÍ
+- ÀÏÀÚ, Á¦¸ñ, ³»¿ë
+- ´Ü¾îÃßÃâ ¹× ºóµµ»êÃâ µî ÇÏ±â

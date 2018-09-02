@@ -3,6 +3,24 @@ setwd('C:/Users/Daniel/click_stream_analysis')
 df <- read.csv('./data/ML_data_clickStreams.csv')
 head(df)
 
+# CT_xxx :: 웹사이트 카테고리 별 체류시간 비율(제품 카테고리별 구매비용 비율)
+# COVERAGE :: 서로 다른 웹 사이트에 얼마나 다양하게 접속했는지에 대한 비율
+#             (서로 다른 카테고리 제품을 얼마나 다양하게 구매하였는지에 대한 비율, 구매 제품 카테고리수 / 전체 카테고리 수)
+# G_DWELLTIME :: 총 체류시간(총 구매비용)
+# PAGEVIEWS :: 총 페이지뷰(총 구매 제품 카테고리의 수)
+# HF_xxx :: 시간대별(0-5시, 6-11시, 12-17시, 18-23시) 체류시간 비율(시간대별 매장 방문 비율)
+# DF_xxx :: 요일별 체류시간 비율(-> 요일별 방문비율)
+# VISITES :: 접속한 서로 다른 웹사이트의 수(구매한 서로 다른 상품 카테고리 수)
+# SITECOV :: 웹사이트 카케고리 별 체류시간 변동계수(카테고리별 체류시간의 '표준편차/평균' 값) 
+#            (제품 카테고별 구매비용 변동계수(카테고리별 구매비용의 표준편차 / 평균))
+# VDAYS :: 총 접속일수(총 매장 방문일수)
+# DAYTIME :: 하루 평균 체류시간(하루 평균 구매비용)
+# DAYCOV :: 일별 변동계수(일일 체류시간의 '표준편차/평균' 값)
+#           (일일 구매비용의 '표준편차/평균' 값)
+# SCH_KEYWORDS :: 네이버에서 검색한 검색량
+# SCH_TOPKEYWORD :: 네이버에서 가장 많이 검색한 검색어
+# GENDER :: 고객성별(남자/여자). 예측하고자 하는 값
+
 df[1, ][, c(2 : 18)]
 unnamed <- unname(df[1, ][, c(2 : 18)])
 class(unnamed)
@@ -19,6 +37,8 @@ df['CT_PORTAL'] / df['DWELLTIME']
 
 tran <- read.csv('./data/transaction.csv', stringsAsFactors = F)
 head(tran, 50)
+head(tran[, -1])
+tran <- tran[, -1]
 str(tran)
 dim(tran)
 head(tran)
@@ -26,22 +46,24 @@ str(tran)
 
 # weekday binning 하기
 tran$ymd <- as.Date(tran$ymd)
-tran$weekday <- format(tran$ymd, '%a')
+tran$wd <- format(tran$ymd, '%a')
 head(tran)
 str(tran)
-tran$weekday <- as.factor(tran$weekday)
+tran$wd <- as.factor(tran$wd)
+tran$wd <- factor(tran$wd, levels=c('일', '월', '화', '수', '목', '금', '토'))
 
 head(tran, 30)
+str(tran)
 
 # install.packages('dummies')
 library(dummies)
 
-tran <- dummy.data.frame(tran, names=c('weekday'), sep='_')
+tran <- dummy.data.frame(tran, names=c('wd'), sep='_')
 head(tran)
-tran <- tran[, c('custid', 'ymd', 'time', 'weekday_일', 'weekday_월', 'weekday_화', 'weekday_수', 
-         'weekday_목', 'weekday_금', 'weekday_토', 'prod', 'amt')]
+names(tran)
+colnames(tran) <- c('ymd', 'time', 'custid', 'prod', 'amt', 'wd_sun', 'wd_mon', 
+                    'wd_tue', 'wd_wed', 'wd_thu', 'wd_fri', 'wd_sat')
 head(tran)
-
 tran$hour <- substr(tran$time, 1, 2)
 head(tran)
 tran$hour <- as.numeric(tran$hour)
@@ -53,37 +75,69 @@ library(tidyverse)
 fivenum(tran$hour)
 max(tran$hour)
 min(tran$hour)
-tran %>% mutate(time_bin = cut(hour, 
+tran %>% mutate(h_bin = cut(hour, 
                                breaks = c(0, 6, 12, 18, 23),
                                include.lowest = T, # 0을 그룹에 포함시키기 위해 반드시 필요, 아니면 NA값 반환됨.
                                labels=c('0-5', '6-11', '12-17', '18-23'))) -> tran
 head(tran)
 
 # hour bin을 one-hot coding
-tran <- dummy.data.frame(tran, names=c('time_bin'), sep='_')
+tran <- dummy.data.frame(tran, names=c('h_bin'), sep='_')
 head(tran,20)
 
 # 고객별 방문 요일의 비율 구하기
+tran %>% group_by(custid) %>% summarise(sum.wd_sun = sum(wd_sun),
+                                        sum.wd_mon = sum(wd_mon),
+                                        sum.wd_tue = sum(wd_tue),
+                                        sum.wd_wed = sum(wd_wed),
+                                        sum.wd_thu = sum(wd_thu),
+                                        sum.wd_fri = sum(wd_fri),
+                                        sum.wd_sat = sum(wd_sat)) -> wd_rate
+head(wd_rate)
+wd_rate %>% mutate(total.wd = rowSums(.[2:8])) -> df_1
+head(df_1)
+df_1$total.wd[1:5]
 
-tran %>% group_by(custid) %>% summarise(sum.weekday_일 = sum(weekday_일),
-                                        sum.weekday_월 = sum(weekday_월),
-                                        sum.weekday_화 = sum(weekday_화),
-                                        sum.weekday_수 = sum(weekday_수),
-                                        sum.weekday_목 = sum(weekday_목),
-                                        sum.weekday_금 = sum(weekday_금),
-                                        sum.weekday_토 = sum(weekday_토)) -> weekday_rate
-head(weekday_rate)
+df_1 %>% mutate(rate_sun = sum.wd_sun / total.wd,
+                rate_mon = sum.wd_mon / total.wd,
+                rate_tue = sum.wd_tue / total.wd,
+                rate_wed = sum.wd_wed / total.wd,
+                rate_thu = sum.wd_thu / total.wd,
+                rate_fri = sum.wd_fri / total.wd,
+                rate_sat = sum.wd_sat / total.wd) -> df_2
 
-weekday_rate %>% mutate(total_weekday = (sum.weekday_일 + sum.weekday_월 + sum.weekday_화 + 
-                                           sum.weekday_수 + sum.weekday_목 + sum.weekday_금 + sum.weekday_토)) -> weekday_rate
+# View(head(df_2))
 
-weekday_rate %>% mutate(rate_sun = sum.weekday_일 / total_weekday,
-                        rate_mon = sum.weekday_월 / total_weekday,
-                        rate_tue = sum.weekday_화 / total_weekday,
-                        rate_wed = sum.weekday_수 / total_weekday,
-                        rate_thu = sum.weekday_목 / total_weekday,
-                        rate_fri = sum.weekday_금 / total_weekday,
-                        rate_sat = sum.weekday_토 / total_weekday,) -> weekday_rate
+# 구매 상품 종류별 지출비율
+head(tran)
+str(tran)
+length(unique(tran$prod))
+tran$prod
+names(tran)
 
-weekday_rate$rate_sun
-head(weekday_rate[, c('custid', 'rate_sun', 'rate_mon', 'rate_tue', 'rate_wed', 'rate_thu', 'rate_fri', 'rate_sat')])
+# 고객별&제품별 총 구매비용 구하기
+tran %>% 
+  group_by(custid, prod) %>%
+  summarise(sum.amt = sum(amt)) -> df_3
+head(df_3)
+
+
+df_3 <- as.data.frame(df_3)
+df_4 <- dummy.data.frame(df_3, names=c('prod'), sep='_')
+
+head(df_4)
+dim(df_4)
+df_4 %>% 
+  group_by(custid) %>%
+  mutate(csum=cumsum(df_4[,c(2:86)]))
+
+
+
+
+
+
+
+
+
+
+
