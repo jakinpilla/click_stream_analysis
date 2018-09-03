@@ -35,6 +35,8 @@ sd(unnamed) / mean(unnamed)
 colnames(df)
 df['CT_PORTAL'] / df['DWELLTIME']
 
+# ㅇ
+
 tran <- read.csv('./data/transaction.csv', stringsAsFactors = F)
 head(tran, 50)
 head(tran[, -1])
@@ -94,6 +96,7 @@ tran %>% group_by(custid) %>% summarise(sum.wd_sun = sum(wd_sun),
                                         sum.wd_fri = sum(wd_fri),
                                         sum.wd_sat = sum(wd_sat)) -> wd_rate
 head(wd_rate)
+dim(wd_rate) # 고객수는 총 2089명
 wd_rate %>% mutate(total.wd = rowSums(.[2:8])) -> df_1
 head(df_1)
 df_1$total.wd[1:5]
@@ -106,7 +109,7 @@ df_1 %>% mutate(rate_sun = sum.wd_sun / total.wd,
                 rate_fri = sum.wd_fri / total.wd,
                 rate_sat = sum.wd_sat / total.wd) -> df_2
 
-# View(head(df_2))
+View(head(df_2, 20))
 
 # 구매 상품 종류별 지출비율
 head(tran)
@@ -121,18 +124,46 @@ tran %>%
   summarise(sum.amt = sum(amt)) -> df_3
 head(df_3)
 
+# pivotting 
+# 목적 : 고객별 구매 상품종류에 대한 지출비용을 알아보기위해 실시
 
-df_3 <- as.data.frame(df_3)
-df_4 <- dummy.data.frame(df_3, names=c('prod'), sep='_')
+library(reshape2)
+names(df_3)
 
+melted <- melt(df_3, id.vars=c('custid', 'prod'), measure.vars = c('sum.amt'))
+head(melted)
+
+dcasted <- dcast(melted, custid ~ prod, value.var = 'value')
+head(dcasted)
+
+head(melted)
+sample_dcasted <- dcasted[1:2, ]
+# fix(sample_dcasted)
+
+# NA를 0으로 채우기
+dcasted %>% mutate_all(funs(ifelse(is.na(.), 0, .))) -> df_4
 head(df_4)
 dim(df_4)
-df_4 %>% 
-  group_by(custid) %>%
-  mutate(csum=cumsum(df_4[,c(2:86)]))
+df_4 %>% mutate(total.amt = rowSums(.[2:85])) -> df_5
+head(df_5)
 
+# 고객들의 상품 종류별 구매비율 구하기
+df_4 %>% mutate_at(vars(-custid), funs(./rowSums(.))) -> df_5
+dim(df_5)
+head(df_5)
+df_6 <- df_5[, 2:85] / df_5$total.amt
+df_6 %>% mutate(total.sum = rowSums(.)) # total.sum =1 이 되는지 확인
 
+df_7 <- cbind(df_5, df_6)
 
+fix(df_7)
+dim(df_7)
+df_7[, c(1, 87:170)] -> df_8
+fix(df_8) # 이것이 고객별 구매비용의 비율!
+
+df_2 %>% left_join(df_7, by='custid') -> df_9
+head(df_9)
+fix(df_9)
 
 
 
