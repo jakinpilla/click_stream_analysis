@@ -46,6 +46,21 @@ dim(tran)
 head(tran)
 str(tran)
 
+tran$ymd <- as.Date(tran$ymd)
+colnames(tran)[which(names(tran) == "time")] <- "hour"
+head(tran)
+tran$hour <- as.numeric(substr(tran$hour, 1, 2))
+head(tran)
+str(tran)
+
+# 고객별 총 매장방문 횟수 구하기
+tran %>% group_by(custid, ymd, time) %>%
+  summarise(visit_count = n()) -> df_visit_count
+
+df_visit_count %>% arrange(desc(visit_count)) # 가장 방문을 많이 한 고객순으로 보기기
+
+
+
 # weekday binning 하기
 tran$ymd <- as.Date(tran$ymd)
 tran$wd <- format(tran$ymd, '%a')
