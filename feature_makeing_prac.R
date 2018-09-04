@@ -24,6 +24,7 @@ head(df)
 df[1, ][, c(2 : 18)]
 unnamed <- unname(df[1, ][, c(2 : 18)])
 class(unnamed)
+
 unnamed <- as.numeric(unnamed)
 class(unnamed)
 str(unnamed)
@@ -35,7 +36,6 @@ sd(unnamed) / mean(unnamed)
 colnames(df)
 df['CT_PORTAL'] / df['DWELLTIME']
 
-# ㅇ
 
 tran <- read.csv('./data/transaction.csv', stringsAsFactors = F)
 head(tran, 50)
@@ -109,7 +109,34 @@ df_1 %>% mutate(rate_sun = sum.wd_sun / total.wd,
                 rate_fri = sum.wd_fri / total.wd,
                 rate_sat = sum.wd_sat / total.wd) -> df_2
 
-View(head(df_2, 20))
+head(df_2)
+dim(df_2)
+df_tmp <- df_2[, c(10:16)]
+df_tmp[] <- lapply(df_tmp, function(x) if(is.numeric(x)) round(x, 3) else x)
+head(df_tmp)
+df_wd_ratio <- cbind(custid = df_2[, 1], df_tmp)
+head(df_wd_ratio)
+# fix(df_wd_ratio)
+# View(head(df_2, 20))
+# 요일별 변동계수(coefficient of variation, CV) = 표준편차 / 평균
+install.packages('matrixStats')
+library(matrixStats)
+library(dplyr)
+
+
+dim(df_wd_ratio)
+
+df_wd_ratio[, -1] %>%
+  mutate(row_std = round(rowSds(as.matrix(.[1:7])), 3),
+         row_mean = round(rowMeans(as.matrix(.[1:7])), 3), 
+         wd_cv = row_std/row_mean) %>%
+  select(1:7, 10) -> wd_ratio_cv
+
+head(df_wd_ratio)
+head(wd_ratio_cv)
+wd_df <- cbind(custid = df_wd_ratio[, 1], wd_ratio_cv)
+
+# fix(wd_df)
 
 # 구매 상품 종류별 지출비율
 head(tran)
@@ -144,26 +171,79 @@ sample_dcasted <- dcasted[1:2, ]
 dcasted %>% mutate_all(funs(ifelse(is.na(.), 0, .))) -> df_4
 head(df_4)
 dim(df_4)
+names(df_4) ## 물품 종류의 수는 84 종류
+
+# 고객별 총구매액(total.amt)에 대한 컬럼 만들기
 df_4 %>% mutate(total.amt = rowSums(.[2:85])) -> df_5
 head(df_5)
 
 # 고객들의 상품 종류별 구매비율 구하기
-df_4 %>% mutate_at(vars(-custid), funs(./rowSums(.))) -> df_5
-dim(df_5)
-head(df_5)
 df_6 <- df_5[, 2:85] / df_5$total.amt
 df_6 %>% mutate(total.sum = rowSums(.)) # total.sum =1 이 되는지 확인
 
+# 소수점 4째자리에서 반올림하여 수들을 정리
+df_6[] <- lapply(df_6, function(x) if(is.numeric(x)) round(x, 3) else x)
+head(df_6)
+names(df_6) <- paste('ratio', names(df_6), sep='_')
+
+head(df_6)
+
 df_7 <- cbind(df_5, df_6)
 
-fix(df_7)
+# fix(df_7)
 dim(df_7)
 df_7[, c(1, 87:170)] -> df_8
-fix(df_8) # 이것이 고객별 구매비용의 비율!
+# fix(df_8) # 이것이 고객별 구매비용의 비율!
+dim(df_8)
+head(df_8)
+df_8$max_prod <- colnames(df_8[, c(2:85)])[apply(df_8[, c(2:85)], 1, which.max)]
+fix(df_8)
+table(df_8$max_prod)
 
-df_2 %>% left_join(df_7, by='custid') -> df_9
-head(df_9)
-fix(df_9)
+df_8 %>% 
+  drop_na %>%
+  group_by(max_prod) %>%
+  summarise(count = n(), percent = count / nrow(.) * 100) %>%
+  arrange(desc(count)) -> df_9
+
+
+# fix(df_9)
+
+df_wd_ratio %>% left_join(df_8, by='custid') -> df_10
+head(df_10)
+# fix(df_10)
+
+# prod_coverage
+# 물품 종류의 갯수 : 84개
+# 소수점 4째자리에서 반올림하여 수들을 정리
+df_4[, -1]
+m <- as.matrix(df_4[, -1])
+m
+m[m>0] <- 1
+m
+df_tmp <- as.data.frame(m)
+prod_sparm <- cbind(custid = df_4$custid, df_tmp)
+# fix(prod_sparm)
+
+prod_sparm
+
+prod_sparm[, -1] %>% 
+  mutate(cover_num = rowSums(.)) %>%
+  mutate(prod_coverage = round(cover_num / 84, 4)) -> df_prod_cover
+
+cbind(custid = prod_sparm[, 1], df_prod_cover) -> df_prod_cover
+head(df_prod_cover)
+dim(df_prod_cover)
+
+names(df_10)
+names(wd_df)
+df_11 <- cbind(wd_df, df_10[, 9:93], prod_coverage = df_prod_cover$prod_coverage)
+fix(df_11)
+
+
+
+
+
 
 
 
